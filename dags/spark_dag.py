@@ -25,7 +25,7 @@ with DAG(
             'body': 'Your server executing Airflow is connected from the external IP<br>'
         }
 
-    templates_dir = os.path.dirname(__file__).join('../templates')
+    templates_dir = os.path.join(os.path.realpath(os.path.dirname(__file__)), '../templates')
     file_loader = FileSystemLoader(templates_dir)
     env = Environment(loader=file_loader)
     template = env.get_template('spark-test.yaml')

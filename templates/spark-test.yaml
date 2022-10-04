@@ -1,0 +1,83 @@
+apiVersion: "sparkoperator.k8s.io/v1beta2"
+kind: SparkApplication
+metadata:
+  name: {{ spark_app.name }}
+  #namespace: default
+spec:
+  type: Python
+  pythonVersion: "3"
+  mode: cluster
+  image: "youngminan/aicns-data-cleaning-task"
+  imagePullPolicy: Always
+  imagePullSecrets:
+    - docker-regcred
+  mainApplicationFile: local:///opt/spark/data_cleaner.py
+  sparkConf:
+    "spark.kubernetes.submission.connectionTimeout": "100000"
+    "spark.kubernetes.submission.requestTimeout": "100000"
+    "spark.kubernetes.driver.connectionTimeout": "100000"
+    "spark.kubernetes.driver.requestTimeout": "100000"
+
+  deps:
+    pyFiles:
+      - local:///opt/spark/func.py
+  sparkVersion: "3.1.1"
+  restartPolicy:
+    type: Never
+    #    onFailureRetries: 0
+    #onFailureRetryInterval: 0
+    #onSubmissionFailureRetries: 0
+    #onSubmissionFailureRetryInterval: 0
+  driver:
+    cores: 1
+    coreLimit: "1200m"
+    memory: "512m"
+    env:
+      - name: HTTP2_DISABLE # https://github.com/fabric8io/kubernetes-client/issues/2212#issuecomment-628551315
+        value: "true"
+      - name: KUBERNETES_TLS_VERSIONS
+        value: "TLSv1.2,TLSv1.3"
+      - name: APP_TIME_START
+        value: {{ spark_app.start }}
+      - name: APP_TIME_END
+        value: {{ spark_app.end }}
+      - name: FEATURE_ID
+        #value: {{ spark_app.feature_id | string }}
+        value: "2"
+    envFrom:
+      - configMapRef:
+          name: pyspark-pi-test-envs
+    labels:
+      version: 3.1.1
+    serviceAccount: spark
+    #volumeMounts:
+    #  - name: "hive-dev"
+    #    mountPath: "/opt/spark/ware-house"
+    podSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      privileged: true
+      allowPrivilegeEscalation: true
+      #javaOptions: "-Dlog4j.configuration=file:///opt/spark/log4j.properties"
+  executor:
+    cores: 1
+    instances: 1
+    memory: "512m"
+    env:
+      - name: HTTP2_DISABLE # https://github.com/fabric8io/kubernetes-client/issues/2212#issuecomment-628551315
+        value: "true"
+      - name: KUBERNETES_TLS_VERSIONS
+        value: "TLSv1.2,TLSv1.3"
+        #javaOptions: "-Dlog4j.configuration=file:///opt/spark/log4j.properties"
+    podSecurityContext:
+      runAsUser: 0
+    securityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      privileged: true
+      allowPrivilegeEscalation: true
+    labels:
+      version: 3.1.1

@@ -12,7 +12,7 @@ with DAG(
     dag_id="spark_tag",
     start_date=pendulum.datetime(2022, 8, 30, tz="Asia/Seoul"),
     schedule_interval="@daily",
-    catchup=False
+    catchup=True
 ) as dag:
     """
     Test

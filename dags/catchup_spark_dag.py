@@ -29,7 +29,7 @@ with DAG(
     file_loader = FileSystemLoader(templates_dir)
     env = Environment(loader=file_loader)
     template = env.get_template('spark-test.yaml')
-    spark_app = {"name": "test-task-{{ run_id }}", "start": "{{ data_interval_start }}", "end": "{{ data_interval_end }}",
+    spark_app = {"name": "test-task-{{ run_id.split('T')[0]|replace('__', '-') }}", "start": "{{ data_interval_start }}", "end": "{{ data_interval_end }}",
                  "feature_id": "2"}
     sa = template.render(spark_app=spark_app)
 

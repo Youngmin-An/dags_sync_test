@@ -13,11 +13,11 @@ spec:
     - docker-regcred
   mainApplicationFile: local:///opt/spark/data_cleaner.py
   sparkConfigMap: pyspark-test-spark-configmap
-  sparkConf:
-    "spark.kubernetes.submission.connectionTimeout": "100000"
-    "spark.kubernetes.submission.requestTimeout": "100000"
-    "spark.kubernetes.driver.connectionTimeout": "100000"
-    "spark.kubernetes.driver.requestTimeout": "100000"
+  #sparkConf:
+  #  "spark.kubernetes.submission.connectionTimeout": "100000"
+  #  "spark.kubernetes.submission.requestTimeout": "100000"
+  #  "spark.kubernetes.driver.connectionTimeout": "100000"
+  #  "spark.kubernetes.driver.requestTimeout": "100000"
 
   deps:
     pyFiles:

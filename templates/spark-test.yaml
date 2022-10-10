@@ -45,6 +45,8 @@ spec:
       - name: FEATURE_ID
         #value: {{ spark_app.feature_id | string }}
         value: "2"
+      - name: SPARK_EXTRA_CONF_PATH
+        value: "/etc/spark/conf/spark-extra.conf"
     envFrom:
       - configMapRef:
           name: pyspark-pi-test-envs
